@@ -61,4 +61,15 @@ spec:
             initialDelaySeconds: 15
             timeoutSeconds: 1
           resources:
-{{ toYaml .Values.Resources | indent 12 }}
+            limits:
+              cpu: {{ .Values.Cpu }}
+              memory: {{ .Values.Memory }}
+            {{- if gt (int .Values.Gpu) 0}}        
+              nvidia.com/gpu: {{ int .Values.Gpu }}
+            {{- end}}
+            requests:
+              cpu: {{ .Values.Cpu }}
+              memory: {{ .Values.Memory }}
+            {{- if gt (int .Values.Gpu) 0}}        
+              nvidia.com/gpu: {{ int .Values.Gpu }}
+            {{- end}}

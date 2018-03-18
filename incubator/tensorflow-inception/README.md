@@ -33,10 +33,17 @@ The following tables lists the configurable parameters of the TensorFlow incepti
 | `Component`      | k8s selector key                   | `tensorflow-inception`                                            |
 | `Cpu`            | container requested cpu            | `100m`                                                            |
 | `Memory`         | container requested memory         | `512Mi`                                                           |
+| `Gpu`            | container requested gpu, 0 means Cpu only | `0`                                                        |
 | `ServicePort`    | k8s service port                   | `9090`                                                            |
 | `ContainerPort`  | Container listening port           | `9090`                                                            |
 
 Specify each parameter using the `--set key=value[,key=value]` argument to `helm install`.
+
+For example, you can run with GPU support like below:
+
+```
+helm install --debug --dry-run  --set Gpu=1 --name my-release incubator/tensorflow-inception
+```
 
 Alternatively, a YAML file that specifies the values for the parameters can be provided while installing the chart. For example,
 

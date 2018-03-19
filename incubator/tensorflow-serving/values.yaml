@@ -1,0 +1,39 @@
+# Default values for acs-tensorflow-serving.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+## Kubernetes configuration
+## support NodePort, LoadBalancer
+##
+serviceType: LoadBalancer
+
+## expose the service to the grpc client
+port: 9090
+replicas: 1
+
+# image: "cheyang/tf-model-server-gpu:1.4"
+image: "cheyang/tf-model-server:1.4"
+imagePullPolicy: "IfNotPresent"
+resources: {}
+  #  limits:
+  #    cpu: 1.0
+  #    memory: 512Mi
+  #    nvidia.com/gpu: 1
+  #  requests:
+  #    cpu: 1.0
+  #    memory: 512Mi
+  #    nvidia.com/gpu: 1
+
+
+## The command and args to run the pod
+command: ["/usr/bin/tensorflow_model_server"]
+args: ["--port=9090", "--model_name=inception", "--model_base_path=/serving/inception-export"]
+## the mount path inside the container
+mountPath: /serving/inception-export
+
+persistence:
+  enabled: false
+## The request and label to select the persistent volume
+   # pvc:
+   #   storage: 5Gi
+   #   matchLabels: {}

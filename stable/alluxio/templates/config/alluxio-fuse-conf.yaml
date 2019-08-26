@@ -4,6 +4,7 @@ metadata:
   name: {{ template "alluxio.fullname" . }}-fuse-config
   annotations:
     "helm.sh/hook": "pre-install"
+    "helm.sh/hook-delete-policy": before-hook-creation
   labels:
     name: {{ template "alluxio.fullname" . }}-fuse-config
     app: {{ template "alluxio.name" . }}

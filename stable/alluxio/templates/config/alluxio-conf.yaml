@@ -3,6 +3,7 @@ kind: ConfigMap
 metadata:
   annotations:
     "helm.sh/hook": "pre-install"
+    "helm.sh/hook-delete-policy": before-hook-creation
   name: {{ template "alluxio.fullname" . }}-config
   labels:
     name: {{ template "alluxio.fullname" . }}-config

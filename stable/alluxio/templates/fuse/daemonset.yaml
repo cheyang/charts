@@ -136,7 +136,7 @@ spec:
         {{- if eq .Values.fuse.shortCircuitPolicy "uuid" }}
         - name: alluxio-domain
           hostPath:
-            path: {{ .Values.worker.volumes.domainHostPath }}
+            path: {{ .Values.domainHostPath }}
             type: "Directory"
         {{- end }}
         {{- if eq .Values.fuse.shortCircuitPolicy "local" }}

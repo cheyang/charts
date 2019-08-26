@@ -162,7 +162,7 @@ spec:
       volumes:
         - name: alluxio-domain
           hostPath:
-            path: {{ .Values.worker.volumes.domainHostPath }}
+            path: {{ .Values.domainHostPath }}
             type: DirectoryOrCreate
         {{- if .Values.secrets }}
         {{- if .Values.secrets.worker }}

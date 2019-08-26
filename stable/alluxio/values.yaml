@@ -33,6 +33,8 @@ user: 0
 group: 0
 fsGroup: 0
 
+domainHostPath: "/tmp/alluxio-domain"
+
 nodeSelector: {}
 
 # properties for all the components
@@ -98,8 +100,6 @@ worker:
     ports:
       rpc: 29999
       web: 30000
-  volumes:
-    domainHostPath: "/tmp/alluxio-domain"
   nodeSelector: {}
 
 

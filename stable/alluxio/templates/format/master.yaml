@@ -4,6 +4,7 @@ metadata:
   name: {{ template "alluxio.fullname" . }}-format-script
   annotations:
     "helm.sh/hook": "pre-install"
+    "helm.sh/hook-delete-policy": before-hook-creation
   labels:
     name: {{ template "alluxio.fullname" . }}-format-script
     app: {{ template "alluxio.name" . }}

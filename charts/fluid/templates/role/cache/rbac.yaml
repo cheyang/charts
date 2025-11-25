@@ -2,7 +2,7 @@
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
-  name: thinruntime-controller
+  name: cacheruntime-controller
 rules:
   - apiGroups:
     - ""
@@ -77,13 +77,13 @@ rules:
     verbs:
     - create
     - patch
-{{- template "fluid.helmDriver.rbacs" . }}
   - apiGroups:
     - ""
     resources:
     - services
     verbs:
     - create
+    - patch
     - delete
     - list
     - watch
@@ -91,16 +91,11 @@ rules:
   - apiGroups:
       - data.fluid.io
     resources:
-      - alluxioruntimes
-      - jindoruntimes
-      - juicefsruntimes
-      - goosefsruntimes
-      - efcruntimes
-      - thinruntimes
-      - thinruntimeprofiles
+      - cacheruntimes
+      - cacheruntimeclasses
       - datasets
-      - thinruntimes/status
-      - thinruntimeprofiles/status
+      - cacheruntimes/status
+      - cacheruntimeclasses/status
       - datasets/status
     verbs:
       - get
@@ -148,8 +143,8 @@ rules:
 apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
 metadata:
-  namespace: {{ include "fluid.namespace" . }}
-  name: thinruntime-controller
+  namespace: fluid-system
+  name: cacheruntime-controller
 rules:
   - apiGroups:
       - coordination.k8s.io
@@ -162,7 +157,7 @@ rules:
     resources:
       - leases
     resourceNames:
-      - thin.data.fluid.io
+      - cache.data.fluid.io
     verbs:
       - get
       - list
@@ -174,32 +169,32 @@ rules:
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
-  name: thinruntime-clusterrolebinding
+  name: cacheruntime-clusterrolebinding
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
-  name: thinruntime-controller
+  name: cacheruntime-controller
 subjects:
   - kind: ServiceAccount
-    name: thinruntime-controller
-    namespace: {{ include "fluid.namespace" . }}
+    name: cacheruntime-controller
+    namespace: fluid-system
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
 metadata:
-  name: thinruntime-rolebinding
-  namespace: {{ include "fluid.namespace" . }}
+  name: cacheruntime-rolebinding
+  namespace: fluid-system
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: Role
-  name: thinruntime-controller
+  name: cacheruntime-controller
 subjects:
   - kind: ServiceAccount
-    name: thinruntime-controller
-    namespace: {{ include "fluid.namespace" . }}
+    name: cacheruntime-controller
+    namespace: fluid-system
 ---
 apiVersion: v1
 kind: ServiceAccount
 metadata:
-  name: thinruntime-controller
-  namespace: {{ include "fluid.namespace" . }}
+  name: cacheruntime-controller
+  namespace: fluid-system

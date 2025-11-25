@@ -37,7 +37,6 @@ spec:
       #hostNetwork: true
       containers:
       - image: {{ include "fluid.controlplane.imageTransform" (list .Values.runtime.juicefs.controller.imagePrefix .Values.runtime.juicefs.controller.imageName .Values.runtime.juicefs.controller.imageTag . ) }}
-        imagePullPolicy: IfNotPresent
         name: manager
         args:
           - --development=false
@@ -81,7 +80,6 @@ spec:
           - name: FLUID_SYNC_RETRY_DURATION
             value: {{ .Values.runtime.syncRetryDuration | quote }}
           {{- end }}
-          {{- include "fluid.controllers.envs.syncScheduleInfoNodeExcludeSelector" . | nindent 10 }}
           - name: HELM_DRIVER
             value: {{ template "fluid.helmDriver" . }}
           {{- if .Values.runtime.juicefs.env }}

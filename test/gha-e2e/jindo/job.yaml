@@ -10,9 +10,6 @@ spec:
       containers:
         - name: busybox
           image: busybox
-          resources:
-            limits:
-              ephemeral-storage: "5Gi"
           command: ["/bin/sh"]
           args:
           - -c
@@ -20,7 +17,6 @@ spec:
           volumeMounts:
             - mountPath: /data
               name: fluid-vol
-      automountServiceAccountToken: false
       volumes:
         - name: fluid-vol
           persistentVolumeClaim:

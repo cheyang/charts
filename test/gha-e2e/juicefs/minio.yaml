@@ -32,9 +32,6 @@ spec:
       - name: minio
         # Pulls the default Minio image from Docker Hub
         image: minio/minio
-        resources:
-          limits:
-            memory: "512Mi"
         args:
         - server
         - /data
@@ -47,4 +44,3 @@ spec:
         ports:
         - containerPort: 9000
           hostPort: 9000
-      automountServiceAccountToken: false

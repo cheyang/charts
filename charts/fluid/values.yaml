@@ -14,12 +14,10 @@ image:
 # Default registry, namespace and version tag for images managed by fluid
 imagePrefix: &defaultImagePrefix fluidcloudnative
 # imagePrefix: &defaultImagePrefix registry.aliyuncs.com/fluid
-version: &defaultVersion v1.1.0-2abd6b3
+version: &defaultVersion v1.1.0-5cc67db6
 
 crdUpgrade:
   enabled: true
-  tolerations:
-    - operator: Exists
   # This sets the time-to-live (TTL) for crd-upgrade jobs. Default is 259200 seconds (3 days).
   ttlSecondsAfterFinished: 259200 
   imagePrefix: *defaultImagePrefix
@@ -52,7 +50,6 @@ dataset:
     imageTag: *defaultVersion
 
 csi:
-  enabled: true
   tolerations:
     - operator: Exists
   featureGates: "FuseRecovery=false"
@@ -61,7 +58,7 @@ csi:
   registrar:
     imagePrefix: *defaultImagePrefix
     imageName: csi-node-driver-registrar
-    imageTag: v2.14.0
+    imageTag: v2.3.0
   plugins:
     imagePrefix: *defaultImagePrefix
     imageName: fluid-csi
@@ -84,10 +81,24 @@ csi:
 runtime:
   criticalFusePod: true
   syncRetryDuration: 15s
-  # syncScheduleInfoNodeExcludeSelector is used to exclude nodes that should be skipped when syncing schedule info
-  # e.g. syncScheduleInfoNodeExcludeSelector: "mynode=dev,type=virtual-kubelet"
-  syncScheduleInfoNodeExcludeSelector: ""
   mountRoot: /runtime-mnt
+  cache:
+    enabled: false
+    replicas: 1
+    tolerations:
+      - operator: Exists
+    resources:
+      requests:
+        cpu: 500m
+        memory: 256Mi
+      limits:
+        cpu: 1000m
+        memory: 512Mi
+    controller:
+      imagePrefix: *defaultImagePrefix
+      imageName: cacheruntime-controller
+      imageTag: *defaultVersion
+
   alluxio:
     replicas: 1
     env: []
@@ -152,11 +163,11 @@ runtime:
     smartdata:
       imagePrefix: registry.cn-shanghai.aliyuncs.com/jindofs
       imageName: smartdata
-      imageTag: 6.9.1-202509151826
+      imageTag: 6.2.0
     fuse:
       imagePrefix: registry.cn-shanghai.aliyuncs.com/jindofs
       imageName: jindo-fuse
-      imageTag: 6.9.1-202509151826
+      imageTag: 6.2.0
     controller:
       imagePrefix: *defaultImagePrefix
       imageName: jindoruntime-controller
@@ -237,7 +248,6 @@ runtime:
   thin:
     replicas: 1
     env: []
-    syncRetryRateLimitDuration: 0s
     tolerations:
       - operator: Exists
     resources: ~
@@ -283,6 +293,7 @@ runtime:
       imagePrefix: *defaultImagePrefix
       imageName: efcruntime-controller
       imageTag: *defaultVersion
+      imagePullPolicy: Always
     init:
       imagePrefix: registry.cn-zhangjiakou.aliyuncs.com/nascache
       imageName: init-alifuse
@@ -323,6 +334,7 @@ runtime:
       imagePrefix: *defaultImagePrefix
       imageName: vineyardruntime-controller
       imageTag: *defaultVersion
+      imagePullPolicy: Always
     master:
       imagePrefix: registry.aliyuncs.com/vineyard
       imageName: vineyardd
@@ -360,12 +372,6 @@ webhook:
     imagePrefix: *defaultImagePrefix
     imageName: fluid-file-prefetcher
     imageTag: v0.1.0
-  fuseSidecar:
-    # Accepted values: "default", "legacy", "native-sidecar"
-    # - "default": default behavior of webhook. The actual behavior will be determined by Fluid. Currently, default behavior equals to "legacy".
-    # - "legacy": fuse sidecar container would be a normal container injected to pod.spec.containers[].
-    # - "native-sidecar": fuse sidecar container would be a native sidecar container injected to pod.spec.initContainers[]. See https://kubernetes.io/blog/2023/08/25/native-sidecar-containers/.
-    sidecarInjectionMode: "default"
   # if configmap `webhook-plugins` exists and not want to replace the content, set this to false.
   forceReplacePluginsProfile: false
   pluginsProfile:

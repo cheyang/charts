@@ -20,7 +20,6 @@ spec:
         volumeMounts:
         - name: data-vol
           mountPath: /data
-      automountServiceAccountToken: false
       volumes:
       - name: data-vol
         persistentVolumeClaim:

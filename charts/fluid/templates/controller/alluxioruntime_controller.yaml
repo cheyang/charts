@@ -37,7 +37,6 @@ spec:
       #hostNetwork: true
       containers:
       - image: {{ include "fluid.controlplane.imageTransform" (list .Values.runtime.alluxio.controller.imagePrefix .Values.runtime.alluxio.controller.imageName .Values.runtime.alluxio.controller.imageTag . ) }}
-        imagePullPolicy: IfNotPresent
         name: manager
         command: ["alluxioruntime-controller", "start"]
         args:
@@ -81,7 +80,6 @@ spec:
           - name: FLUID_SYNC_RETRY_DURATION
             value: {{ .Values.runtime.syncRetryDuration | quote }}
           {{- end }}
-          {{- include "fluid.controllers.envs.syncScheduleInfoNodeExcludeSelector" . | nindent 10 }}
           {{- if .Values.image.imagePullSecrets }}
           - name: IMAGE_PULL_SECRETS
             {{- $secretList := list }}

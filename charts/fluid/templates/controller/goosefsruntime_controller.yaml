@@ -37,7 +37,7 @@ spec:
       #hostNetwork: true
       containers:
       - image: {{ include "fluid.controlplane.imageTransform" (list .Values.runtime.goosefs.controller.imagePrefix .Values.runtime.goosefs.controller.imageName .Values.runtime.goosefs.controller.imageTag . ) }}
-        imagePullPolicy: IfNotPresent
+        imagePullPolicy: Always
         name: manager
         command: ["goosefsruntime-controller", "start"]
         args:
@@ -79,7 +79,6 @@ spec:
           - name: FLUID_SYNC_RETRY_DURATION
             value: {{ .Values.runtime.syncRetryDuration | quote }}
           {{- end }}
-          {{- include "fluid.controllers.envs.syncScheduleInfoNodeExcludeSelector" . | nindent 10 }}
           {{- if .Values.runtime.goosefs.env }}
           {{ toYaml .Values.runtime.goosefs.env | nindent 10 }}
           {{- end }}

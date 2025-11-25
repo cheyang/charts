@@ -36,7 +36,6 @@ spec:
       {{- end }}
       containers:
       - image: {{ include "fluid.controlplane.imageTransform" (list .Values.runtime.jindo.controller.imagePrefix .Values.runtime.jindo.controller.imageName .Values.runtime.jindo.controller.imageTag . ) }}
-        imagePullPolicy: IfNotPresent
         name: manager
         command: ["jindoruntime-controller", "start"]
         args:
@@ -84,7 +83,6 @@ spec:
         - name: FLUID_SYNC_RETRY_DURATION
           value: {{ .Values.runtime.syncRetryDuration | quote }}
         {{- end }}
-        {{- include "fluid.controllers.envs.syncScheduleInfoNodeExcludeSelector" . | nindent 8 }}
         {{- if .Values.runtime.jindo.engine }}
         - name: JINDO_ENGINE_TYPE
           value: {{ .Values.runtime.jindo.engine | quote }}
@@ -96,7 +94,7 @@ spec:
         - name: HELM_DRIVER
           value: {{ template "fluid.helmDriver" . }}
         {{- if .Values.runtime.jindo.env }}
-        {{ toYaml .Values.runtime.jindo.env | nindent 8 }}
+        {{ toYaml .Values.runtime.jindo.env | nindent 10 }}
         {{- end }}
         ports:
           - containerPort: 8080

@@ -37,7 +37,6 @@ spec:
       #hostNetwork: true
       containers:
       - image: {{ include "fluid.controlplane.imageTransform" (list .Values.runtime.thin.controller.imagePrefix .Values.runtime.thin.controller.imageName .Values.runtime.thin.controller.imageTag . ) }}
-        imagePullPolicy: IfNotPresent
         name: manager
         args:
           - --development=false
@@ -59,11 +58,10 @@ spec:
           - name: CRITICAL_FUSE_POD
             value: {{ ternary "true" "false" (semverCompare ">=1.16.0-0" .Capabilities.KubeVersion.Version) | quote }}
           {{- end }}
-          {{- if .Values.runtime.thin.syncRetryRateLimitDuration }}
+          {{- if .Values.runtime.syncRetryDuration }}
           - name: FLUID_SYNC_RETRY_DURATION
-            value: {{ .Values.runtime.thin.syncRetryRateLimitDuration | quote }}
+            value: {{ .Values.runtime.syncRetryDuration | quote }}
           {{- end }}
-          {{- include "fluid.controllers.envs.syncScheduleInfoNodeExcludeSelector" . | nindent 10 }}
           - name: HELM_DRIVER
             value: {{ template "fluid.helmDriver" . }}
           - name: THIN_FUSE_CONFIG_STORAGE
